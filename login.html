@@ -1,207 +1,439 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AQX — تسجيل الدخول</title>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: #111827;
-            --gold-primary: #d4af37;
-            --gold-light: #f3e5ab;
-            --text-main: #f9fafb;
-            --text-muted: #9ca3af;
-            --border-color: rgba(212, 175, 55, 0.25);
-            --error-color: #ef4444;
-            --success-color: #10b981;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم | AQX General Admin Core</title>
+  <!-- Google Fonts: Tajawal -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --error-color: #ef4444;
+      --success-color: #10b981;
+    }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-        }
+    body {
+      background: radial-gradient(circle at top right, #1e293b, #0f172a);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--text-main);
+    }
 
-        .login-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
-            position: relative;
-            overflow: hidden;
-        }
+    .auth-container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px 32px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
 
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
-            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
-        }
+    .brand-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
 
-        .header { text-align: center; margin-bottom: 2rem; }
-        .logo {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 3px;
-        }
-        .title { font-size: 1.2rem; color: var(--text-main); margin-top: 0.5rem; }
-        .subtitle { font-size: 0.85rem; color: var(--gold-primary); margin-top: 0.2rem; }
+    .brand-header i {
+      font-size: 42px;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
 
-        .form-group { margin-bottom: 1.25rem; }
-        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
-        input {
-            width: 100%;
-            padding: 12px 16px;
-            background-color: #1f2937;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-        }
-        input:focus { border-color: var(--gold-primary); }
+    .brand-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
 
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, var(--gold-primary), #b8860b);
-            border: none;
-            border-radius: 8px;
-            color: #000;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 1rem;
-        }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .brand-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 6px;
+    }
 
-        .alert-box {
-            margin-top: 1.2rem;
-            padding: 10px 14px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            display: none;
-            text-align: center;
-        }
-        .alert-error { background-color: rgba(239, 68, 68, 0.15); color: var(--error-color); border: 1px solid rgba(239, 68, 68, 0.3); }
-        .alert-success { background-color: rgba(16, 185, 129, 0.15); color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.3); }
-    </style>
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      right: 16px;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 14px 48px 14px 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 15px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    .options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .forgot-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .resend-box {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .resend-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--error-color);
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--success-color);
+    }
+
+    .loader {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #ffffff;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <div class="header">
-            <div class="logo">AQX</div>
-            <h1 class="title">القرماني اكس</h1>
-            <p class="subtitle">تسجيل دخول المالك فقط</p>
-        </div>
-
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">البريد الإلكتروني للمالك</label>
-                <input type="email" id="email" required value="alqurmanix@gmail.com">
-            </div>
-
-            <div class="form-group">
-                <label for="password">كلمة المرور</label>
-                <input type="password" id="password" required placeholder="••••••••">
-            </div>
-
-            <button type="submit" id="submitBtn" class="btn-submit">تسجيل الدخول والتحقق</button>
-        </form>
-
-        <div id="alertBox" class="alert-box"></div>
+  <div class="auth-container">
+    <div class="brand-header">
+      <i class="fa-solid fa-shield-halved"></i>
+      <h1>AQX General Admin</h1>
+      <p>بوابة تسجيل دخول الإدارة العامة</p>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <!-- الرسائل التنبيهية -->
+    <div id="alertBox" class="alert">
+      <i id="alertIcon" class="fa-solid"></i>
+      <span id="alertMessage"></span>
+    </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDDnd0vqF_YzIhSL8bRPa4WF921HLVtNPM",
-            authDomain: "aqx-general-admin-core.firebaseapp.com",
-            projectId: "aqx-general-admin-core",
-            storageBucket: "aqx-general-admin-core.firebasestorage.app",
-            messagingSenderId: "382292435821",
-            appId: "1:382292435821:web:a07be2da91cec07659b064"
-        };
+    <!-- نموذج تسجيل الدخول -->
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">البريد الإلكتروني للآدمن</label>
+        <div class="input-wrapper">
+          <i class="fa-regular fa-envelope"></i>
+          <input type="email" id="email" placeholder="admin@domain.com" required autocomplete="email">
+        </div>
+      </div>
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+      <div class="form-group">
+        <label for="password">كلمة المرور</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+      </div>
 
-        // رابط المحرك المحدث الأخير
-        const ENGINE_URL = 'https://script.google.com/macros/s/AKfycbwsQOVgsdjP5JZ7Tci-Sj4_MnYnE1F112wwveEi3cQEBMO1ogcgl6zGdY5ui48Y3dfH/exec';
-        const NEXT_PAGE = 'security-audit.html';
+      <div class="options-row">
+        <span></span>
+        <a id="forgotPasswordBtn" class="forgot-link">نسيت كلمة السر؟</a>
+      </div>
 
-        const form = document.getElementById('loginForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const alertBox = document.getElementById('alertBox');
+      <button type="submit" id="submitBtn" class="btn-submit">
+        <span id="btnText">تسجيل الدخول</span>
+        <span id="btnLoader" class="loader" style="display: none;"></span>
+      </button>
+    </form>
 
-        function showAlert(msg, isError = true) {
-            alertBox.style.display = 'block';
-            alertBox.className = `alert-box ${isError ? 'alert-error' : 'alert-success'}`;
-            alertBox.textContent = msg;
+    <!-- منطقة إرسال رابط التفعيل -->
+    <div class="resend-box">
+      <span>لم يصلك رابط التفعيل؟</span>
+      <button id="resendVerificationBtn" class="resend-btn">إعادة إرسال تفعيل البريد</button>
+    </div>
+  </div>
+
+  <!-- Firebase Modular SDK Import -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      sendPasswordResetEmail, 
+      sendEmailVerification 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // إعدادات Firebase الخاصة بالمشروع
+    const firebaseConfig = {
+      apiKey: "AIzaSyDDnd0vqF_YzIhSL8bRPa4WF921HLVtNPM",
+      authDomain: "aqx-general-admin-core.firebaseapp.com",
+      projectId: "aqx-general-admin-core",
+      storageBucket: "aqx-general-admin-core.firebasestorage.app",
+      messagingSenderId: "382292435821",
+      appId: "1:382292435821:web:a07be2da91cec07659b064",
+      measurementId: "G-0RZLCBDD4F"
+    };
+
+    // رابط محرك Google Apps Script
+    const ENGINE_URL = "https://script.google.com/macros/s/AKfycbzWkGGg6tgJpYbn_bd_wjcDJ956_X3XhLgE07mM_rF7-ysLCYFsSvmYzDgrkQcNo0xg_w/exec";
+
+    // تهيئة Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // عناصر الواجهة
+    const loginForm = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const submitBtn = document.getElementById("submitBtn");
+    const btnText = document.getElementById("btnText");
+    const btnLoader = document.getElementById("btnLoader");
+    const alertBox = document.getElementById("alertBox");
+    const alertMessage = document.getElementById("alertMessage");
+    const alertIcon = document.getElementById("alertIcon");
+    const forgotPasswordBtn = document.getElementById("forgotPasswordBtn");
+    const resendVerificationBtn = document.getElementById("resendVerificationBtn");
+
+    // دالة إظهار التنبيهات
+    function showAlert(message, type = "error") {
+      alertBox.className = `alert alert-${type}`;
+      alertIcon.className = type === "error" ? "fa-solid fa-circle-exclamation" : "fa-solid fa-circle-check";
+      alertMessage.textContent = message;
+      alertBox.style.display = "flex";
+    }
+
+    // دالة إخفاء التنبيهات
+    function hideAlert() {
+      alertBox.style.display = "none";
+    }
+
+    // دالة حالة التحميل
+    function setLoading(isLoading) {
+      if (isLoading) {
+        submitBtn.disabled = true;
+        btnText.style.display = "none";
+        btnLoader.style.display = "inline-block";
+      } else {
+        submitBtn.disabled = false;
+        btnText.style.display = "inline";
+        btnLoader.style.display = "none";
+      }
+    }
+
+    // 1️⃣ عملية تسجيل الدخول
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideAlert();
+      setLoading(true);
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // التحقق من مفصلية تفعيل البريد الإلكتروني
+        if (!user.emailVerified) {
+          showAlert("بريدك الإلكتروني غير مفعّل. يرجى الضغط على زر إعادة إرسال التفعيل بالأسفل.", "error");
+          setLoading(false);
+          return;
         }
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+        // إرسال إشعار للمحرك لتسجيل تسجيل الدخول الناجح
+        fetch(`${ENGINE_URL}?collection=admin_accounts&id=AQX-ADMIN-001`)
+          .then(res => res.json())
+          .then(data => console.log("Engine sync:", data))
+          .catch(err => console.warn("Engine log warning:", err));
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'جاري تسجيل الدخول في Firebase...';
-            alertBox.style.display = 'none';
+        showAlert("تم تسجيل الدخول بنجاح! جاري التوجيه...", "success");
+        
+        setTimeout(() => {
+          // يمكنك تغيير مسار التوجيه للوحة الإدارة التي تريدها
+          window.location.href = "dashboard.html"; 
+        }, 1500);
 
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const idToken = await userCredential.user.getIdToken(true);
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          showAlert("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+        } else if (error.code === 'auth/too-many-requests') {
+          showAlert("تم حظر المحاولات مؤقتاً بسبب تكرار الدخول الخاطئ.");
+        } else {
+          showAlert("حدث خطأ في الاتصال بالنظام: " + error.message);
+        }
+      }
+    });
 
-                submitBtn.textContent = 'جاري التحقق مع المحرك الأمني...';
+    // 2️⃣ إرسال رابط نسيت كلمة السر
+    forgotPasswordBtn.addEventListener("click", async () => {
+      hideAlert();
+      const email = emailInput.value.trim();
 
-                const targetUrl = `${ENGINE_URL}?action=verifyOwner&idToken=${encodeURIComponent(idToken)}`;
-                
-                const response = await fetch(targetUrl);
-                const result = await response.json();
+      if (!email) {
+        showAlert("يرجى كتابة البريد الإلكتروني أولاً في الخانة المخصصة.");
+        emailInput.focus();
+        return;
+      }
 
-                if (result.ok && result.authenticated) {
-                    showAlert('تم التحقق بنجاح! جاري التوجيه للفحص الأمني...', false);
-                    sessionStorage.setItem('AQX_OWNER_VERIFIED', 'true');
-                    sessionStorage.setItem('AQX_REQUEST_ID', result.requestId);
+      try {
+        await sendPasswordResetEmail(auth, email);
+        showAlert(`تم إرسال رابط إعادة تعيين كلمة السر إلى (${email}). تفقد صندوق الوارد/الرسائل غير المرغوب فيها.`, "success");
+      } catch (error) {
+        console.error(error);
+        showAlert("فشل إرسال الرابط. تأكد من صحة البريد الإلكتروني.");
+      }
+    });
 
-                    setTimeout(() => {
-                        window.location.href = NEXT_PAGE;
-                    }, 1000);
-                } else {
-                    throw new Error(result.error || 'تم رفض الوصول من قبل المحرك.');
-                }
+    // 3️⃣ إعادة إرسال رابط تفعيل البريد الإلكتروني
+    resendVerificationBtn.addEventListener("click", async () => {
+      hideAlert();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
 
-            } catch (error) {
-                console.error("Error:", error);
-                let message = error.message;
+      if (!email || !password) {
+        showAlert("يرجى كتابة البريد الإلكتروني وكلمة المرور أولاً.");
+        return;
+      }
 
-                if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                    message = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-                }
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-                showAlert(message, true);
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'تسجيل الدخول والتحقق';
-            }
-        });
-    </script>
+        if (user.emailVerified) {
+          showAlert("هذا البريد مفعل بالفعل ولا يحتاج لإعادة إرسال.", "success");
+          return;
+        }
+
+        await sendEmailVerification(user);
+        showAlert(`تم إرسال رابط تفعيل جديد إلى البريد (${email}) بنجاح.`, "success");
+
+      } catch (error) {
+        console.error(error);
+        showAlert("حدث خطأ أثناء إرسال رابط التفعيل. تحقق من البيانات المدخلة.");
+      }
+    });
+  </script>
 </body>
 </html>
