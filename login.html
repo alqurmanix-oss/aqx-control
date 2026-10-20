@@ -143,8 +143,8 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // الرابط الجديد الخاص بمحركك
-        const ENGINE_URL = 'https://script.google.com/macros/s/AKfycbxtevECdDu_oIBsVsISub9nsnS8MibLYeFDsDjEygFgYfh54sJh2NdR3x8inBS8I7m5/exec';
+        // رابط المحرك المحدث الأخير
+        const ENGINE_URL = 'https://script.google.com/macros/s/AKfycbwsQOVgsdjP5JZ7Tci-Sj4_MnYnE1F112wwveEi3cQEBMO1ogcgl6zGdY5ui48Y3dfH/exec';
         const NEXT_PAGE = 'security-audit.html';
 
         const form = document.getElementById('loginForm');
@@ -167,13 +167,11 @@
             alertBox.style.display = 'none';
 
             try {
-                // 1. تسجيل الدخول عبر فايربيس
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 const idToken = await userCredential.user.getIdToken(true);
 
                 submitBtn.textContent = 'جاري التحقق مع المحرك الأمني...';
 
-                // 2. إرسال الطلب عبر GET Parameters لمنع مشاكل التوجيه
                 const targetUrl = `${ENGINE_URL}?action=verifyOwner&idToken=${encodeURIComponent(idToken)}`;
                 
                 const response = await fetch(targetUrl);
