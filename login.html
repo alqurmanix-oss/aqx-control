@@ -161,17 +161,29 @@
             const password = document.getElementById('password').value;
 
             submitBtn.disabled = true;
-            submitBtn.textContent = 'جاري التحقق...';
+            submitBtn.textContent = 'جاري تسجيل الدخول في Firebase...';
             alertBox.style.display = 'none';
 
             try {
+                // 1. تسجيل الدخول باستخدام Firebase Auth
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const idToken = await userCredential.user.getIdToken(true);
+                
+                // التأكد من توثيق البريد الإلكتروني (إن وجد)
+                const user = userCredential.user;
+                const idToken = await user.getIdToken(true);
 
+                submitBtn.textContent = 'جاري التحقق مع المحرك الرئيسي...';
+
+                // 2. إرسال ID Token للمحرك للتحقق من المالك
                 const response = await fetch(ENGINE_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'verifyOwner', idToken: idToken })
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify({
+                        action: 'verifyOwner',
+                        idToken: idToken
+                    })
                 });
 
                 const result = await response.json();
@@ -183,15 +195,21 @@
 
                     setTimeout(() => {
                         window.location.href = NEXT_PAGE;
-                    }, 1200);
+                    }, 1000);
                 } else {
-                    throw new Error(result.error || 'فشل التحقق من ملكية الحساب.');
+                    throw new Error(result.error || 'تم رفض الوصول من قبل المحرك الأمني.');
                 }
+
             } catch (error) {
+                console.error("Login Error Details:", error);
                 let message = error.message;
-                if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                    message = 'البيانات غير صحيحة.';
+
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    message = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                } else if (error.code === 'auth/email-not-verified') {
+                    message = 'يرجى توثيق بريدك الإلكتروني في Firebase أولاً.';
                 }
+
                 showAlert(message, true);
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'تسجيل الدخول والتحقق';
