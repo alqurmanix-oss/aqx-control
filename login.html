@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQX — تسجيل الدخول</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --gold-primary: #d4af37;
+            --gold-light: #f3e5ab;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border-color: rgba(212, 175, 55, 0.25);
+            --error-color: #ef4444;
+            --success-color: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .login-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+
+        .header { text-align: center; margin-bottom: 2rem; }
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+        }
+        .title { font-size: 1.2rem; color: var(--text-main); margin-top: 0.5rem; }
+        .subtitle { font-size: 0.85rem; color: var(--gold-primary); margin-top: 0.2rem; }
+
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: #1f2937;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        input:focus { border-color: var(--gold-primary); }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--gold-primary), #b8860b);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .alert-box {
+            margin-top: 1.2rem;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: none;
+            text-align: center;
+        }
+        .alert-error { background-color: rgba(239, 68, 68, 0.15); color: var(--error-color); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .alert-success { background-color: rgba(16, 185, 129, 0.15); color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.3); }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="header">
+            <div class="logo">AQX</div>
+            <h1 class="title">القرماني اكس</h1>
+            <p class="subtitle">تسجيل دخول المالك فقط</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">البريد الإلكتروني للمالك</label>
+                <input type="email" id="email" required value="alqurmanix@gmail.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">كلمة المرور</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-submit">تسجيل الدخول والتحقق</button>
+        </form>
+
+        <div id="alertBox" class="alert-box"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDnd0vqF_YzIhSL8bRPa4WF921HLVtNPM",
+            authDomain: "aqx-general-admin-core.firebaseapp.com",
+            projectId: "aqx-general-admin-core",
+            storageBucket: "aqx-general-admin-core.firebasestorage.app",
+            messagingSenderId: "382292435821",
+            appId: "1:382292435821:web:a07be2da91cec07659b064"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        const ENGINE_URL = 'https://script.google.com/macros/s/AKfycbzuAcHm1wIxA-vEg3nNTrxWi23p6lAAt3ngCUyl1DMzGQupQeCSPuPIGibaU4JJi0jYww/exec';
+        const NEXT_PAGE = 'security-audit.html';
+
+        const form = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertBox = document.getElementById('alertBox');
+
+        function showAlert(msg, isError = true) {
+            alertBox.style.display = 'block';
+            alertBox.className = `alert-box ${isError ? 'alert-error' : 'alert-success'}`;
+            alertBox.textContent = msg;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري التحقق...';
+            alertBox.style.display = 'none';
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const idToken = await userCredential.user.getIdToken(true);
+
+                const response = await fetch(ENGINE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'verifyOwner', idToken: idToken })
+                });
+
+                const result = await response.json();
+
+                if (result.ok && result.authenticated) {
+                    showAlert('تم التحقق بنجاح! جاري التوجيه لنظام الفحص الأمني...', false);
+                    sessionStorage.setItem('AQX_OWNER_VERIFIED', 'true');
+                    sessionStorage.setItem('AQX_REQUEST_ID', result.requestId);
+
+                    setTimeout(() => {
+                        window.location.href = NEXT_PAGE;
+                    }, 1200);
+                } else {
+                    throw new Error(result.error || 'فشل التحقق من ملكية الحساب.');
+                }
+            } catch (error) {
+                let message = error.message;
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                    message = 'البيانات غير صحيحة.';
+                }
+                showAlert(message, true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'تسجيل الدخول والتحقق';
+            }
+        });
+    </script>
+</body>
+</html>
