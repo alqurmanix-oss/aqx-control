@@ -143,8 +143,8 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // الرابط الجديد للمحرك
-        const ENGINE_URL = 'https://script.google.com/macros/s/AKfycbyOYzUmfeEmLGtihXvi3H5zYsxsFNyMR2NXVQCXbVk9lTWA3WJLDsU7V6Q2YyJ9h64/exec';
+        // الرابط الجديد الخاص بمحركك
+        const ENGINE_URL = 'https://script.google.com/macros/s/AKfycbxtevECdDu_oIBsVsISub9nsnS8MibLYeFDsDjEygFgYfh54sJh2NdR3x8inBS8I7m5/exec';
         const NEXT_PAGE = 'security-audit.html';
 
         const form = document.getElementById('loginForm');
@@ -173,21 +173,11 @@
 
                 submitBtn.textContent = 'جاري التحقق مع المحرك الأمني...';
 
-                // 2. إرسال الطلب للرابط الجديد للمحرك
-                const response = await fetch(ENGINE_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'verifyOwner', idToken: idToken })
-                });
-
-                const responseText = await response.text();
-                let result;
-
-                try {
-                    result = JSON.parse(responseText);
-                } catch (err) {
-                    throw new Error('استجابة المحرك غير صالحة. تأكد من إعدادات النشر.');
-                }
+                // 2. إرسال الطلب عبر GET Parameters لمنع مشاكل التوجيه
+                const targetUrl = `${ENGINE_URL}?action=verifyOwner&idToken=${encodeURIComponent(idToken)}`;
+                
+                const response = await fetch(targetUrl);
+                const result = await response.json();
 
                 if (result.ok && result.authenticated) {
                     showAlert('تم التحقق بنجاح! جاري التوجيه للفحص الأمني...', false);
